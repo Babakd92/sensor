@@ -2,11 +2,11 @@ const SIGNUP_ENDPOINT = "";
 const FALLBACK_EMAIL = "dialameh.babak@gmail.com";
 const SENSOR_LATITUDE = 40.743377;
 const SENSOR_LONGITUDE = -84.024581;
-const dashboardUpdatedAt = "2026-05-24 23:39";
+const dashboardUpdatedAt = "2026-05-24 23:58";
 const ndviImageUrl = "";
 const ndviAcquiredAt = "";
 const ndviCloudPercent = "";
-const ndviStatusMessage = "Could not initialize Google Earth Engine: Caller does not have required permission to use project babakdialameh-92. Grant the caller the roles/serviceusage.serviceUsageConsumer role, or a custom role with the serviceusage.services.use permission, by visiting https://console.developers.google.com/iam-admin/iam?project=babakdialameh-92 and then retry. Propagation of the new permission may take a few minutes.";
+const ndviStatusMessage = "Could not initialize Google Earth Engine: Permission 'earthengine.computations.create' denied on resource 'projects/babakdialameh-92' (or it may not exist).";
 const chartHoverTargets = {
   precipChart: [],
   tempChart: []
@@ -233,7 +233,7 @@ const forecastRiskData = [
     "date": "2026-05-24",
     "rain": 0.0,
     "rainProbability": 29.0,
-    "wind": 13.6
+    "wind": 15.1
   },
   {
     "date": "2026-05-25",
@@ -251,25 +251,25 @@ const forecastRiskData = [
     "date": "2026-05-27",
     "rain": 0.7,
     "rainProbability": 16.0,
-    "wind": 15.6
+    "wind": 12.6
   },
   {
     "date": "2026-05-28",
     "rain": 0.0,
     "rainProbability": 9.0,
-    "wind": 15.8
+    "wind": 17.7
   },
   {
     "date": "2026-05-29",
     "rain": 0.0,
     "rainProbability": 5.0,
-    "wind": 24.5
+    "wind": 24.2
   },
   {
     "date": "2026-05-30",
     "rain": 0.0,
     "rainProbability": 6.0,
-    "wind": 32.4
+    "wind": 26.3
   }
 ];
 
@@ -340,7 +340,7 @@ const forecastTableData = [
     "minTemp": 12.3,
     "rainMm": 0.0,
     "rainProbability": 29.0,
-    "windKmh": 13.6
+    "windKmh": 15.1
   },
   {
     "date": "2026-05-25",
@@ -367,7 +367,7 @@ const forecastTableData = [
     "minTemp": 18.3,
     "rainMm": 0.7,
     "rainProbability": 16.0,
-    "windKmh": 15.6
+    "windKmh": 12.6
   },
   {
     "date": "2026-05-28",
@@ -376,7 +376,7 @@ const forecastTableData = [
     "minTemp": 13.4,
     "rainMm": 0.0,
     "rainProbability": 9.0,
-    "windKmh": 15.8
+    "windKmh": 17.7
   },
   {
     "date": "2026-05-29",
@@ -385,7 +385,7 @@ const forecastTableData = [
     "minTemp": 11.2,
     "rainMm": 0.0,
     "rainProbability": 5.0,
-    "windKmh": 24.5
+    "windKmh": 24.2
   },
   {
     "date": "2026-05-30",
@@ -394,7 +394,7 @@ const forecastTableData = [
     "minTemp": 8.5,
     "rainMm": 0.0,
     "rainProbability": 6.0,
-    "windKmh": 32.4
+    "windKmh": 26.3
   }
 ];
 
@@ -406,7 +406,7 @@ const secondWeekForecastTableData = [
     "minTemp": 7.8,
     "rainMm": 0.0,
     "rainProbability": 14.0,
-    "windKmh": 28.6
+    "windKmh": 26.3
   },
   {
     "date": "2026-06-01",
@@ -415,7 +415,7 @@ const secondWeekForecastTableData = [
     "minTemp": 10.8,
     "rainMm": 0.0,
     "rainProbability": 9.0,
-    "windKmh": 18.9
+    "windKmh": 22.8
   },
   {
     "date": "2026-06-02",
@@ -424,7 +424,7 @@ const secondWeekForecastTableData = [
     "minTemp": 9.5,
     "rainMm": 0.0,
     "rainProbability": 7.0,
-    "windKmh": 12.3
+    "windKmh": 15.9
   },
   {
     "date": "2026-06-03",
@@ -433,7 +433,7 @@ const secondWeekForecastTableData = [
     "minTemp": 12.2,
     "rainMm": 0.0,
     "rainProbability": 10.0,
-    "windKmh": 11.6
+    "windKmh": 10.5
   },
   {
     "date": "2026-06-04",
@@ -442,7 +442,7 @@ const secondWeekForecastTableData = [
     "minTemp": 15.6,
     "rainMm": 0.0,
     "rainProbability": 16.0,
-    "windKmh": 14.8
+    "windKmh": 10.4
   },
   {
     "date": "2026-06-05",
@@ -451,7 +451,7 @@ const secondWeekForecastTableData = [
     "minTemp": 17.1,
     "rainMm": 0.0,
     "rainProbability": 29.0,
-    "windKmh": 22.5
+    "windKmh": 18.8
   },
   {
     "date": "2026-06-06",
@@ -460,7 +460,7 @@ const secondWeekForecastTableData = [
     "minTemp": 16.8,
     "rainMm": 0.0,
     "rainProbability": 35.0,
-    "windKmh": 11.0
+    "windKmh": 12.2
   }
 ];
 
