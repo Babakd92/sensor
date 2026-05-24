@@ -2,11 +2,11 @@ const SIGNUP_ENDPOINT = "";
 const FALLBACK_EMAIL = "dialameh.babak@gmail.com";
 const SENSOR_LATITUDE = 40.743377;
 const SENSOR_LONGITUDE = -84.024581;
-const dashboardUpdatedAt = "2026-05-24 19:02";
+const dashboardUpdatedAt = "2026-05-24 23:33";
 const ndviImageUrl = "";
 const ndviAcquiredAt = "";
 const ndviCloudPercent = "";
-const ndviStatusMessage = "";
+const ndviStatusMessage = "Could not initialize Google Earth Engine. Check the GitHub Actions logs and GEE secrets.";
 const chartHoverTargets = {
   precipChart: [],
   tempChart: []
@@ -65,7 +65,7 @@ const precipData = [
   },
   {
     "date": "2026-05-27",
-    "value": 1.1,
+    "value": 0.7,
     "type": "future"
   },
   {
@@ -105,7 +105,7 @@ const precipData = [
   },
   {
     "date": "2026-06-04",
-    "value": 0.3,
+    "value": 0.0,
     "type": "future"
   },
   {
@@ -249,7 +249,7 @@ const forecastRiskData = [
   },
   {
     "date": "2026-05-27",
-    "rain": 1.1,
+    "rain": 0.7,
     "rainProbability": 16.0,
     "wind": 16.5
   },
@@ -362,10 +362,10 @@ const forecastTableData = [
   },
   {
     "date": "2026-05-27",
-    "condition": "Moderate drizzle",
+    "condition": "Light drizzle",
     "maxTemp": 24.5,
     "minTemp": 16.5,
-    "rainMm": 1.1,
+    "rainMm": 0.7,
     "rainProbability": 16.0,
     "windKmh": 16.5
   },
@@ -410,7 +410,7 @@ const secondWeekForecastTableData = [
   },
   {
     "date": "2026-06-01",
-    "condition": "Partly cloudy",
+    "condition": "Overcast",
     "maxTemp": 20.9,
     "minTemp": 8.1,
     "rainMm": 0.0,
@@ -428,7 +428,7 @@ const secondWeekForecastTableData = [
   },
   {
     "date": "2026-06-03",
-    "condition": "Overcast",
+    "condition": "Clear sky",
     "maxTemp": 23.8,
     "minTemp": 12.8,
     "rainMm": 0.0,
@@ -437,10 +437,10 @@ const secondWeekForecastTableData = [
   },
   {
     "date": "2026-06-04",
-    "condition": "Light drizzle",
+    "condition": "Overcast",
     "maxTemp": 22.8,
     "minTemp": 14.7,
-    "rainMm": 0.3,
+    "rainMm": 0.0,
     "rainProbability": 16.0,
     "windKmh": 17.9
   },
