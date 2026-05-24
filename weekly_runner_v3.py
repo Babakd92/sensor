@@ -575,6 +575,10 @@ def replace_js_const_value(js_text: str, name: str, value) -> str:
     return updated
 
 
+def ndvi_status(message: str) -> dict:
+    return {"statusMessage": message}
+
+
 def round_or_none(value, digits: int = 2):
     if value is None or pd.isna(value):
         return None
@@ -640,10 +644,11 @@ def initialize_earth_engine() -> bool:
 def fetch_latest_sentinel2_ndvi() -> dict:
     """Download the latest Sentinel-2 NDVI PNG for the configured field asset."""
     if not GEE_FIELD_ASSET_ID:
-        print("  ⚠  GEE_FIELD_ASSET_ID is not set; skipping Sentinel-2 NDVI.")
-        return {}
+        message = "GEE_FIELD_ASSET_ID is not set; skipping Sentinel-2 NDVI."
+        print(f"  ⚠  {message}")
+        return ndvi_status(message)
     if not initialize_earth_engine():
-        return {}
+        return ndvi_status("Could not initialize Google Earth Engine. Check the GitHub Actions logs and GEE secrets.")
 
     project_dir = Path(__file__).resolve().parent
     out_path = project_dir / NDVI_IMAGE_FILENAME
@@ -661,11 +666,9 @@ def fetch_latest_sentinel2_ndvi() -> dict:
         )
         image_count = collection.size().getInfo()
         if not image_count:
-            print(
-                "  ⚠  No Sentinel-2 images found for the field in the last 60 days; "
-                "skipping NDVI."
-            )
-            return {}
+            message = "No Sentinel-2 images found for the field in the last 60 days."
+            print(f"  ⚠  {message}")
+            return ndvi_status(message)
 
         image = ee.Image(collection.first())
         acquired_at = ee.Date(image.get("system:time_start")).format("YYYY-MM-dd").getInfo()
@@ -702,8 +705,9 @@ def fetch_latest_sentinel2_ndvi() -> dict:
             "cloudPercent": round(float(cloud_percent), 1) if cloud_percent is not None else "",
         }
     except Exception as e:
-        print(f"  ⚠  Sentinel-2 NDVI fetch failed: {e}")
-        return {}
+        message = f"Sentinel-2 NDVI fetch failed: {e}"
+        print(f"  ⚠  {message}")
+        return ndvi_status(message)
 
 
 def update_dashboard_ndvi_metadata(ndvi_meta: dict) -> None:
@@ -714,9 +718,17 @@ def update_dashboard_ndvi_metadata(ndvi_meta: dict) -> None:
         return
 
     js_text = app_js_path.read_text(encoding="utf-8")
-    js_text = replace_js_const_string(js_text, "ndviImageUrl", ndvi_meta.get("imageUrl", ""))
-    js_text = replace_js_const_string(js_text, "ndviAcquiredAt", ndvi_meta.get("acquiredAt", ""))
-    js_text = replace_js_const_value(js_text, "ndviCloudPercent", ndvi_meta.get("cloudPercent", ""))
+    if ndvi_meta.get("imageUrl"):
+        js_text = replace_js_const_string(js_text, "ndviImageUrl", ndvi_meta.get("imageUrl", ""))
+        js_text = replace_js_const_string(js_text, "ndviAcquiredAt", ndvi_meta.get("acquiredAt", ""))
+        js_text = replace_js_const_value(js_text, "ndviCloudPercent", ndvi_meta.get("cloudPercent", ""))
+        js_text = replace_js_const_string(js_text, "ndviStatusMessage", "")
+    else:
+        js_text = replace_js_const_string(
+            js_text,
+            "ndviStatusMessage",
+            ndvi_meta.get("statusMessage", "Sentinel-2 NDVI was not updated."),
+        )
     app_js_path.write_text(js_text, encoding="utf-8")
 
 
