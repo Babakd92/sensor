@@ -2,7 +2,7 @@ const SIGNUP_ENDPOINT = "";
 const FALLBACK_EMAIL = "dialameh.babak@gmail.com";
 const SENSOR_LATITUDE = 40.743377;
 const SENSOR_LONGITUDE = -84.024581;
-const dashboardUpdatedAt = "2026-05-24 19:02";
+const dashboardUpdatedAt = "2026-05-24 23:25";
 const ndviImageUrl = "";
 const ndviAcquiredAt = "";
 const ndviCloudPercent = "";
@@ -409,7 +409,7 @@ const secondWeekForecastTableData = [
   },
   {
     "date": "2026-06-01",
-    "condition": "Partly cloudy",
+    "condition": "Overcast",
     "maxTemp": 20.9,
     "minTemp": 8.1,
     "rainMm": 0.0,
@@ -427,7 +427,7 @@ const secondWeekForecastTableData = [
   },
   {
     "date": "2026-06-03",
-    "condition": "Overcast",
+    "condition": "Clear sky",
     "maxTemp": 23.8,
     "minTemp": 12.8,
     "rainMm": 0.0,
