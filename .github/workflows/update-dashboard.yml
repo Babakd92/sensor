@@ -1,0 +1,85 @@
+name: Update Zentra dashboard
+
+on:
+  workflow_dispatch:
+  schedule:
+    # GitHub schedules use UTC. These two runs cover 2 AM America/New_York
+    # across daylight saving time; the timezone guard below skips the other run.
+    - cron: "0 6 * * *"
+    - cron: "0 7 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-zentra-dashboard
+  cancel-in-progress: false
+
+jobs:
+  update-dashboard:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Check schedule timezone
+        id: schedule-check
+        run: |
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import os
+          from datetime import datetime
+          from zoneinfo import ZoneInfo
+
+          if os.environ.get("GITHUB_EVENT_NAME") == "workflow_dispatch":
+              print("run=true")
+          else:
+              now = datetime.now(ZoneInfo("America/New_York"))
+              print(f"run={'true' if now.hour == 2 else 'false'}")
+              print(f"local_time={now:%Y-%m-%d %H:%M:%S %Z}")
+          PY
+
+      - name: Show skipped schedule
+        if: steps.schedule-check.outputs.run != 'true'
+        run: echo "Skipping because it is not 2 AM in America/New_York. Local time was ${{ steps.schedule-check.outputs.local_time }}."
+
+      - name: Set up Python
+        if: steps.schedule-check.outputs.run == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install Python dependencies
+        if: steps.schedule-check.outputs.run == 'true'
+        run: pip install -r requirements.txt
+
+      - name: Refresh dashboard data
+        if: steps.schedule-check.outputs.run == 'true'
+        env:
+          ZENTRA_API_TOKEN: ${{ secrets.ZENTRA_API_TOKEN }}
+          ZENTRA_DEVICE_SN: ${{ vars.ZENTRA_DEVICE_SN || 'z6-27971' }}
+          ZENTRA_PORT_NUM: ${{ vars.ZENTRA_PORT_NUM || '6' }}
+          SENSOR_LATITUDE: ${{ vars.SENSOR_LATITUDE || '40.743377' }}
+          SENSOR_LONGITUDE: ${{ vars.SENSOR_LONGITUDE || '-84.024581' }}
+          GEE_FIELD_ASSET_ID: ${{ secrets.GEE_FIELD_ASSET_ID }}
+          GEE_SERVICE_ACCOUNT_KEY_JSON: ${{ secrets.GEE_SERVICE_ACCOUNT_KEY_JSON }}
+          GEE_PROJECT: ${{ vars.GEE_PROJECT }}
+        run: python weekly_runner_v3.py --dashboard-only
+
+      - name: Commit and push updated dashboard
+        if: steps.schedule-check.outputs.run == 'true'
+        run: |
+          if git diff --quiet -- app.js index.html styles.css sentinel2_ndvi_latest.png && [ -z "$(git status --porcelain -- sentinel2_ndvi_latest.png)" ]; then
+            echo "No dashboard changes to commit."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app.js index.html styles.css
+          if [ -f sentinel2_ndvi_latest.png ]; then
+            git add sentinel2_ndvi_latest.png
+          fi
+          git commit -m "Update dashboard data"
+          git push
