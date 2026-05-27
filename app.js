@@ -2,11 +2,11 @@ const SIGNUP_ENDPOINT = "";
 const FALLBACK_EMAIL = "dialameh.babak@gmail.com";
 const SENSOR_LATITUDE = 40.743377;
 const SENSOR_LONGITUDE = -84.024581;
-const dashboardUpdatedAt = "2026-05-27 16:01";
+const dashboardUpdatedAt = "2026-05-27 16:25";
 const ndviImageUrl = "";
 const ndviAcquiredAt = "";
 const ndviCloudPercent = "";
-const ndviStatusMessage = "";
+const ndviStatusMessage = "Could not initialize Google Earth Engine: Invalid control character at: line 5 column 46 (char 176)";
 const ndviStats = {};
 const chartHoverTargets = {
   precipChart: [],
@@ -233,7 +233,7 @@ const forecastRiskData = [
   {
     "date": "2026-05-27",
     "rain": 1.4,
-    "rainProbability": 28.0,
+    "rainProbability": 36.0,
     "wind": 11.9
   },
   {
@@ -340,7 +340,7 @@ const forecastTableData = [
     "maxTemp": 24.2,
     "minTemp": 17.4,
     "rainMm": 1.4,
-    "rainProbability": 28.0,
+    "rainProbability": 36.0,
     "windKmh": 11.9
   },
   {
