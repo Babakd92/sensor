@@ -2,12 +2,12 @@ const SIGNUP_ENDPOINT = "";
 const FALLBACK_EMAIL = "dialameh.babak@gmail.com";
 const SENSOR_LATITUDE = 40.743377;
 const SENSOR_LONGITUDE = -84.024581;
-const dashboardUpdatedAt = "2026-05-27 17:08";
-const ndviImageUrl = "sentinel2_ndvi_latest.png?v=20260527170900";
+const dashboardUpdatedAt = "2026-05-27 17:14";
+const ndviImageUrl = "sentinel2_ndvi_latest.png?v=20260527171431";
 const ndviAcquiredAt = "2026-05-21";
 const ndviCloudPercent = 5.3;
 const ndviStatusMessage = "";
-const ndviStats = {};
+const ndviStats = {"mean": 0.39, "min": -0.01, "max": 0.86, "stdDev": 0.132, "lowVegetationPct": 10.7, "moderateVegetationPct": 82.7, "highVegetationPct": 6.6, "interpretation": "The field shows mixed or moderate vegetation vigor across valid pixels."};
 const chartHoverTargets = {
   precipChart: [],
   tempChart: []
