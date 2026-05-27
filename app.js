@@ -2,8 +2,8 @@ const SIGNUP_ENDPOINT = "";
 const FALLBACK_EMAIL = "dialameh.babak@gmail.com";
 const SENSOR_LATITUDE = 40.743377;
 const SENSOR_LONGITUDE = -84.024581;
-const dashboardUpdatedAt = "2026-05-27 17:05";
-const ndviImageUrl = "sentinel2_ndvi_latest.png?v=20260527170517";
+const dashboardUpdatedAt = "2026-05-27 17:08";
+const ndviImageUrl = "sentinel2_ndvi_latest.png?v=20260527170900";
 const ndviAcquiredAt = "2026-05-21";
 const ndviCloudPercent = 5.3;
 const ndviStatusMessage = "";
@@ -233,7 +233,7 @@ const forecastRiskData = [
   {
     "date": "2026-05-27",
     "rain": 0.0,
-    "rainProbability": 36.0,
+    "rainProbability": 50.0,
     "wind": 12.7
   },
   {
@@ -340,7 +340,7 @@ const forecastTableData = [
     "maxTemp": 23.5,
     "minTemp": 17.4,
     "rainMm": 0.0,
-    "rainProbability": 36.0,
+    "rainProbability": 50.0,
     "windKmh": 12.7
   },
   {
