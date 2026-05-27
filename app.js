@@ -2,12 +2,12 @@ const SIGNUP_ENDPOINT = "";
 const FALLBACK_EMAIL = "dialameh.babak@gmail.com";
 const SENSOR_LATITUDE = 40.743377;
 const SENSOR_LONGITUDE = -84.024581;
-const dashboardUpdatedAt = "2026-05-27 15:15";
-const ndviImageUrl = "sentinel2_ndvi_latest.png?v=20260527151527";
+const dashboardUpdatedAt = "2026-05-27 15:21";
+const ndviImageUrl = "sentinel2_ndvi_latest.png?v=20260527152139";
 const ndviAcquiredAt = "2026-05-21";
 const ndviCloudPercent = 5.3;
 const ndviStatusMessage = "";
-const ndviStats = {"mean": 0.39, "min": -0.01, "max": 0.86, "stdDev": 0.132, "highVegetationPct": 6.6, "moderateVegetationPct": 82.7, "lowVegetationPct": 10.7, "interpretation": "The latest Sentinel-2 scene indicates limited green vegetation or mixed bare soil and vegetation; 7% of valid pixels are high-NDVI vegetation, 11% are low-NDVI/bare or stressed areas."}; 7% of valid pixels are high-NDVI vegetation, 11% are low-NDVI/bare or stressed areas."};
+const ndviStats = {"mean": 0.39, "min": -0.01, "max": 0.86, "stdDev": 0.132, "highVegetationPct": 6.6, "moderateVegetationPct": 82.7, "lowVegetationPct": 10.7, "interpretation": "The latest Sentinel-2 scene indicates limited green vegetation or mixed bare soil and vegetation; 7% of valid pixels are high-NDVI vegetation, 11% are low-NDVI/bare or stressed areas."}; 7% of valid pixels are high-NDVI vegetation, 11% are low-NDVI/bare or stressed areas."}; 7% of valid pixels are high-NDVI vegetation, 11% are low-NDVI/bare or stressed areas."};
 const chartHoverTargets = {
   precipChart: [],
   tempChart: []
