@@ -2,11 +2,11 @@ const SIGNUP_ENDPOINT = "";
 const FALLBACK_EMAIL = "dialameh.babak@gmail.com";
 const SENSOR_LATITUDE = 40.743377;
 const SENSOR_LONGITUDE = -84.024581;
-const dashboardUpdatedAt = "2026-05-27 16:25";
+const dashboardUpdatedAt = "2026-05-27 16:58";
 const ndviImageUrl = "";
 const ndviAcquiredAt = "";
 const ndviCloudPercent = "";
-const ndviStatusMessage = "Could not initialize Google Earth Engine: Invalid control character at: line 5 column 46 (char 176)";
+const ndviStatusMessage = "Could not initialize Google Earth Engine: name 'tempfile' is not defined";
 const ndviStats = {};
 const chartHoverTargets = {
   precipChart: [],
@@ -51,7 +51,7 @@ const precipData = [
   },
   {
     "date": "2026-05-27",
-    "value": 1.4,
+    "value": 0.0,
     "type": "future"
   },
   {
@@ -160,7 +160,7 @@ const tempData = [
   {
     "date": "2026-05-27",
     "futureMin": 17.4,
-    "futureMax": 24.2
+    "futureMax": 23.5
   },
   {
     "date": "2026-05-28",
@@ -232,9 +232,9 @@ const tempData = [
 const forecastRiskData = [
   {
     "date": "2026-05-27",
-    "rain": 1.4,
+    "rain": 0.0,
     "rainProbability": 36.0,
-    "wind": 11.9
+    "wind": 12.7
   },
   {
     "date": "2026-05-28",
@@ -336,12 +336,12 @@ const historicalSummaryData = [
 const forecastTableData = [
   {
     "date": "2026-05-27",
-    "condition": "Slight rain",
-    "maxTemp": 24.2,
+    "condition": "Overcast",
+    "maxTemp": 23.5,
     "minTemp": 17.4,
-    "rainMm": 1.4,
+    "rainMm": 0.0,
     "rainProbability": 36.0,
-    "windKmh": 11.9
+    "windKmh": 12.7
   },
   {
     "date": "2026-05-28",
