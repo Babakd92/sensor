@@ -23,6 +23,7 @@ import re
 import sys
 import time
 import smtplib
+import tempfile
 import traceback
 import urllib.request
 import requests
