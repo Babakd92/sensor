@@ -25,6 +25,8 @@ jobs:
 
       - name: Check schedule timezone
         id: schedule-check
+        env:
+          SCHEDULE_CRON: ${{ github.event.schedule }}
         run: |
           python - <<'PY' >> "$GITHUB_OUTPUT"
           import os
@@ -34,14 +36,25 @@ jobs:
           if os.environ.get("GITHUB_EVENT_NAME") == "workflow_dispatch":
               print("run=true")
           else:
-              now = datetime.now(ZoneInfo("America/New_York"))
-              print(f"run={'true' if now.hour == 2 else 'false'}")
-              print(f"local_time={now:%Y-%m-%d %H:%M:%S %Z}")
+              local_zone = ZoneInfo("America/New_York")
+              now_local = datetime.now(local_zone)
+              target_local = now_local.replace(hour=2, minute=0, second=0, microsecond=0)
+              target_utc_hour = target_local.astimezone(ZoneInfo("UTC")).hour
+
+              cron = os.environ.get("SCHEDULE_CRON", "")
+              parts = cron.split()
+              scheduled_utc_hour = int(parts[1]) if len(parts) >= 2 else None
+              should_run = scheduled_utc_hour == target_utc_hour
+
+              print(f"run={'true' if should_run else 'false'}")
+              print(f"local_time={now_local:%Y-%m-%d %H:%M:%S %Z}")
+              print(f"scheduled_cron={cron}")
+              print(f"target_utc_hour={target_utc_hour}")
           PY
 
       - name: Show skipped schedule
         if: steps.schedule-check.outputs.run != 'true'
-        run: echo "Skipping because it is not 2 AM in America/New_York. Local time was ${{ steps.schedule-check.outputs.local_time }}."
+        run: echo "Skipping duplicate 2 AM Eastern schedule slot. Local time was ${{ steps.schedule-check.outputs.local_time }}; cron was ${{ steps.schedule-check.outputs.scheduled_cron }}."
 
       - name: Set up Python
         if: steps.schedule-check.outputs.run == 'true'
@@ -58,6 +71,7 @@ jobs:
         if: steps.schedule-check.outputs.run == 'true'
         env:
           ZENTRA_API_TOKEN: ${{ secrets.ZENTRA_API_TOKEN }}
+          API_TOKEN: ${{ secrets.API_TOKEN }}
           ZENTRA_DEVICE_SN: ${{ vars.ZENTRA_DEVICE_SN || 'z6-27971' }}
           ZENTRA_PORT_NUM: ${{ vars.ZENTRA_PORT_NUM || '6' }}
           SENSOR_LATITUDE: ${{ vars.SENSOR_LATITUDE || '40.743377' }}
