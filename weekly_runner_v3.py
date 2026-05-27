@@ -599,6 +599,22 @@ def forecast_table_rows(forecast: pd.DataFrame) -> list[dict]:
     return rows
 
 
+def ndvi_interpretation(stats: dict) -> str:
+    mean_ndvi = stats.get("mean")
+    high_pct = stats.get("highVegetationPct", 0) or 0
+    low_pct = stats.get("lowVegetationPct", 0) or 0
+
+    if mean_ndvi is None:
+        return ""
+    if mean_ndvi >= 0.6 and high_pct >= 50:
+        return "Most valid field pixels show dense, vigorous green vegetation."
+    if mean_ndvi >= 0.3:
+        return "The field shows mixed or moderate vegetation vigor across valid pixels."
+    if low_pct >= 50:
+        return "Much of the valid area has low NDVI, which may indicate bare soil, stress, water, shadow, or cloud-edge effects."
+    return "The field has a mixed NDVI pattern; compare with recent field conditions before making management decisions."
+
+
 def initialize_earth_engine() -> tuple[bool, str]:
     if ee is None:
         message = "earthengine-api is not installed; skipping Sentinel-2 NDVI."
@@ -690,6 +706,68 @@ def fetch_latest_sentinel2_ndvi() -> dict:
             .rename("NDVI")
             .clip(field)
         )
+
+        stats_raw = ndvi.reduceRegion(
+            reducer=(
+                ee.Reducer.mean()
+                .combine(ee.Reducer.min(), sharedInputs=True)
+                .combine(ee.Reducer.max(), sharedInputs=True)
+                .combine(ee.Reducer.stdDev(), sharedInputs=True)
+            ),
+            geometry=field,
+            scale=10,
+            maxPixels=1e9,
+            bestEffort=True,
+        ).getInfo()
+
+        area_image = ee.Image.pixelArea().updateMask(ndvi.mask())
+        total_area = area_image.reduceRegion(
+            reducer=ee.Reducer.sum(),
+            geometry=field,
+            scale=10,
+            maxPixels=1e9,
+            bestEffort=True,
+        ).get("area")
+        low_area = area_image.updateMask(ndvi.lt(0.3)).reduceRegion(
+            reducer=ee.Reducer.sum(),
+            geometry=field,
+            scale=10,
+            maxPixels=1e9,
+            bestEffort=True,
+        ).get("area")
+        moderate_area = area_image.updateMask(ndvi.gte(0.3).And(ndvi.lt(0.6))).reduceRegion(
+            reducer=ee.Reducer.sum(),
+            geometry=field,
+            scale=10,
+            maxPixels=1e9,
+            bestEffort=True,
+        ).get("area")
+        high_area = area_image.updateMask(ndvi.gte(0.6)).reduceRegion(
+            reducer=ee.Reducer.sum(),
+            geometry=field,
+            scale=10,
+            maxPixels=1e9,
+            bestEffort=True,
+        ).get("area")
+        area_stats = ee.Dictionary({
+            "total": total_area,
+            "low": low_area,
+            "moderate": moderate_area,
+            "high": high_area,
+        }).getInfo()
+
+        total = area_stats.get("total") or 0
+        ndvi_stats = {
+            "mean": round_or_none(stats_raw.get("NDVI_mean"), 3),
+            "min": round_or_none(stats_raw.get("NDVI_min"), 3),
+            "max": round_or_none(stats_raw.get("NDVI_max"), 3),
+            "stdDev": round_or_none(stats_raw.get("NDVI_stdDev"), 3),
+            "lowVegetationPct": round_or_none((area_stats.get("low") or 0) / total * 100, 1) if total else None,
+            "moderateVegetationPct": round_or_none((area_stats.get("moderate") or 0) / total * 100, 1) if total else None,
+            "highVegetationPct": round_or_none((area_stats.get("high") or 0) / total * 100, 1) if total else None,
+        }
+        ndvi_stats["interpretation"] = ndvi_interpretation(ndvi_stats)
+
         rendered = ndvi.visualize(
             min=-0.2,
             max=0.9,
@@ -706,6 +784,7 @@ def fetch_latest_sentinel2_ndvi() -> dict:
             "imageUrl": f"{NDVI_IMAGE_FILENAME}?v={datetime.now().strftime('%Y%m%d%H%M%S')}",
             "acquiredAt": acquired_at,
             "cloudPercent": round(float(cloud_percent), 1) if cloud_percent is not None else "",
+            "stats": ndvi_stats,
         }
     except Exception as e:
         message = f"Sentinel-2 NDVI fetch failed: {e}"
@@ -725,6 +804,7 @@ def update_dashboard_ndvi_metadata(ndvi_meta: dict) -> None:
     js_text = replace_js_const_string(js_text, "ndviAcquiredAt", ndvi_meta.get("acquiredAt", ""))
     js_text = replace_js_const_value(js_text, "ndviCloudPercent", ndvi_meta.get("cloudPercent", ""))
     js_text = replace_js_const_string(js_text, "ndviStatusMessage", ndvi_meta.get("statusMessage", ""))
+    js_text = replace_js_const_value(js_text, "ndviStats", ndvi_meta.get("stats", {}))
     app_js_path.write_text(js_text, encoding="utf-8")
 
 
