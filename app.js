@@ -2,11 +2,11 @@ const SIGNUP_ENDPOINT = "";
 const FALLBACK_EMAIL = "dialameh.babak@gmail.com";
 const SENSOR_LATITUDE = 40.743377;
 const SENSOR_LONGITUDE = -84.024581;
-const dashboardUpdatedAt = "2026-05-27 16:58";
-const ndviImageUrl = "";
-const ndviAcquiredAt = "";
-const ndviCloudPercent = "";
-const ndviStatusMessage = "Could not initialize Google Earth Engine: name 'tempfile' is not defined";
+const dashboardUpdatedAt = "2026-05-27 17:05";
+const ndviImageUrl = "sentinel2_ndvi_latest.png?v=20260527170517";
+const ndviAcquiredAt = "2026-05-21";
+const ndviCloudPercent = 5.3;
+const ndviStatusMessage = "";
 const ndviStats = {};
 const chartHoverTargets = {
   precipChart: [],
