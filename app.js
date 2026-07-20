@@ -2,8 +2,8 @@ const SIGNUP_ENDPOINT = "";
 const FALLBACK_EMAIL = "dialameh.babak@gmail.com";
 const SENSOR_LATITUDE = 40.743377;
 const SENSOR_LONGITUDE = -84.024581;
-const dashboardUpdatedAt = "2026-07-19 07:53";
-const ndviImageUrl = "sentinel2_ndvi_latest.png?v=20260719075358";
+const dashboardUpdatedAt = "2026-07-20 08:32";
+const ndviImageUrl = "sentinel2_ndvi_latest.png?v=20260720083239";
 const ndviAcquiredAt = "2026-07-17";
 const ndviCloudPercent = 51.0;
 const ndviStatusMessage = "";
@@ -15,13 +15,8 @@ const chartHoverTargets = {
 
 const precipData = [
   {
-    "date": "2026-07-12",
-    "value": 0.0,
-    "type": "past"
-  },
-  {
     "date": "2026-07-13",
-    "value": 0.02,
+    "value": 0.0,
     "type": "past"
   },
   {
@@ -52,7 +47,7 @@ const precipData = [
   {
     "date": "2026-07-19",
     "value": 0.0,
-    "type": "future"
+    "type": "past"
   },
   {
     "date": "2026-07-20",
@@ -61,7 +56,7 @@ const precipData = [
   },
   {
     "date": "2026-07-21",
-    "value": 2.5,
+    "value": 8.6,
     "type": "future"
   },
   {
@@ -91,31 +86,36 @@ const precipData = [
   },
   {
     "date": "2026-07-27",
-    "value": 0.0,
+    "value": 6.6,
     "type": "future"
   },
   {
     "date": "2026-07-28",
-    "value": 0.0,
+    "value": 0.3,
     "type": "future"
   },
   {
     "date": "2026-07-29",
-    "value": 0.6,
-    "type": "future"
-  },
-  {
-    "date": "2026-07-30",
-    "value": 2.1,
-    "type": "future"
-  },
-  {
-    "date": "2026-07-31",
     "value": 0.0,
     "type": "future"
   },
   {
+    "date": "2026-07-30",
+    "value": 0.0,
+    "type": "future"
+  },
+  {
+    "date": "2026-07-31",
+    "value": 0.3,
+    "type": "future"
+  },
+  {
     "date": "2026-08-01",
+    "value": 0.0,
+    "type": "future"
+  },
+  {
+    "date": "2026-08-02",
     "value": 0.0,
     "type": "future"
   }
@@ -123,14 +123,9 @@ const precipData = [
 
 const tempData = [
   {
-    "date": "2026-07-12",
-    "pastMin": 17.38,
-    "pastMax": 26.93
-  },
-  {
     "date": "2026-07-13",
-    "pastMin": 14.03,
-    "pastMax": 29.95
+    "pastMin": 18.85,
+    "pastMax": 29.1
   },
   {
     "date": "2026-07-14",
@@ -159,137 +154,134 @@ const tempData = [
   },
   {
     "date": "2026-07-19",
-    "futureMin": 18.3,
-    "futureMax": 26.7
+    "pastMin": 16.6,
+    "pastMax": 25.4
   },
   {
     "date": "2026-07-20",
-    "futureMin": 16.0,
-    "futureMax": 28.5
+    "futureMin": 14.5,
+    "futureMax": 28.6
   },
   {
     "date": "2026-07-21",
-    "futureMin": 18.3,
-    "futureMax": 29.1
+    "futureMin": 20.8,
+    "futureMax": 29.3
   },
   {
     "date": "2026-07-22",
-    "futureMin": 11.8,
-    "futureMax": 22.3
+    "futureMin": 12.5,
+    "futureMax": 19.6
   },
   {
     "date": "2026-07-23",
-    "futureMin": 11.0,
-    "futureMax": 23.5
+    "futureMin": 10.0,
+    "futureMax": 22.4
   },
   {
     "date": "2026-07-24",
-    "futureMin": 14.0,
-    "futureMax": 24.0
+    "futureMin": 12.5,
+    "futureMax": 23.8
   },
   {
     "date": "2026-07-25",
-    "futureMin": 14.5,
-    "futureMax": 26.9
+    "futureMin": 14.3,
+    "futureMax": 26.7
   },
   {
     "date": "2026-07-26",
-    "futureMin": 13.6,
-    "futureMax": 27.4
+    "futureMin": 17.0,
+    "futureMax": 26.3
   },
   {
     "date": "2026-07-27",
-    "futureMin": 16.3,
-    "futureMax": 28.2
+    "futureMin": 20.9,
+    "futureMax": 28.0
   },
   {
     "date": "2026-07-28",
-    "futureMin": 19.8,
-    "futureMax": 30.9
+    "futureMin": 16.9,
+    "futureMax": 25.2
   },
   {
     "date": "2026-07-29",
-    "futureMin": 22.4,
-    "futureMax": 32.5
+    "futureMin": 14.4,
+    "futureMax": 25.8
   },
   {
     "date": "2026-07-30",
-    "futureMin": 19.3,
+    "futureMin": 16.4,
     "futureMax": 27.9
   },
   {
     "date": "2026-07-31",
-    "futureMin": 12.2,
-    "futureMax": 22.2
+    "futureMin": 20.9,
+    "futureMax": 29.8
   },
   {
     "date": "2026-08-01",
-    "futureMin": 12.0,
-    "futureMax": 25.1
+    "futureMin": 16.6,
+    "futureMax": 29.6
+  },
+  {
+    "date": "2026-08-02",
+    "futureMin": 19.6,
+    "futureMax": 31.3
   }
 ];
 
 const forecastRiskData = [
   {
-    "date": "2026-07-19",
-    "rain": 0.0,
-    "rainProbability": 3.0,
-    "wind": 18.0
-  },
-  {
     "date": "2026-07-20",
     "rain": 0.0,
-    "rainProbability": 3.0,
-    "wind": 12.0
+    "rainProbability": 4.0,
+    "wind": 15.8
   },
   {
     "date": "2026-07-21",
-    "rain": 2.5,
-    "rainProbability": 68.0,
-    "wind": 31.1
+    "rain": 8.6,
+    "rainProbability": 44.0,
+    "wind": 35.8
   },
   {
     "date": "2026-07-22",
     "rain": 0.0,
-    "rainProbability": 14.0,
-    "wind": 21.5
+    "rainProbability": 18.0,
+    "wind": 21.7
   },
   {
     "date": "2026-07-23",
     "rain": 0.0,
-    "rainProbability": 1.0,
-    "wind": 12.8
+    "rainProbability": 0.0,
+    "wind": 10.9
   },
   {
     "date": "2026-07-24",
     "rain": 0.0,
-    "rainProbability": 4.0,
-    "wind": 6.9
+    "rainProbability": 1.0,
+    "wind": 9.3
   },
   {
     "date": "2026-07-25",
     "rain": 0.0,
-    "rainProbability": 7.0,
-    "wind": 18.3
+    "rainProbability": 4.0,
+    "wind": 14.8
+  },
+  {
+    "date": "2026-07-26",
+    "rain": 0.0,
+    "rainProbability": 12.0,
+    "wind": 18.2
   }
 ];
 
 const historicalSummaryData = [
   {
-    "date": "2026-07-12",
-    "minTemp": 17.38,
-    "maxTemp": 26.93,
-    "precipitation": 0.0,
-    "solarRadiation": 77.79,
-    "windSpeed": 0.92
-  },
-  {
     "date": "2026-07-13",
-    "minTemp": 14.03,
-    "maxTemp": 29.95,
-    "precipitation": 0.02,
-    "solarRadiation": 313.9,
-    "windSpeed": 0.82
+    "minTemp": 18.85,
+    "maxTemp": 29.1,
+    "precipitation": 0.0,
+    "solarRadiation": 75.88,
+    "windSpeed": 0.37
   },
   {
     "date": "2026-07-14",
@@ -330,138 +322,146 @@ const historicalSummaryData = [
     "precipitation": 2.42,
     "solarRadiation": 217.99,
     "windSpeed": 1.95
+  },
+  {
+    "date": "2026-07-19",
+    "minTemp": 16.6,
+    "maxTemp": 25.4,
+    "precipitation": 0.0,
+    "solarRadiation": 254.44,
+    "windSpeed": 1.16
   }
 ];
 
 const forecastTableData = [
   {
-    "date": "2026-07-19",
-    "condition": "Overcast",
-    "maxTemp": 26.7,
-    "minTemp": 18.3,
-    "rainMm": 0.0,
-    "rainProbability": 3.0,
-    "windKmh": 18.0
-  },
-  {
     "date": "2026-07-20",
     "condition": "Overcast",
-    "maxTemp": 28.5,
-    "minTemp": 16.0,
+    "maxTemp": 28.6,
+    "minTemp": 14.5,
     "rainMm": 0.0,
-    "rainProbability": 3.0,
-    "windKmh": 12.0
+    "rainProbability": 4.0,
+    "windKmh": 15.8
   },
   {
     "date": "2026-07-21",
-    "condition": "Thunderstorm w/ hail",
-    "maxTemp": 29.1,
-    "minTemp": 18.3,
-    "rainMm": 2.5,
-    "rainProbability": 68.0,
-    "windKmh": 31.1
+    "condition": "Heavy rain",
+    "maxTemp": 29.3,
+    "minTemp": 20.8,
+    "rainMm": 8.6,
+    "rainProbability": 44.0,
+    "windKmh": 35.8
   },
   {
     "date": "2026-07-22",
     "condition": "Overcast",
-    "maxTemp": 22.3,
-    "minTemp": 11.8,
+    "maxTemp": 19.6,
+    "minTemp": 12.5,
     "rainMm": 0.0,
-    "rainProbability": 14.0,
-    "windKmh": 21.5
+    "rainProbability": 18.0,
+    "windKmh": 21.7
   },
   {
     "date": "2026-07-23",
-    "condition": "Overcast",
-    "maxTemp": 23.5,
-    "minTemp": 11.0,
+    "condition": "Clear sky",
+    "maxTemp": 22.4,
+    "minTemp": 10.0,
     "rainMm": 0.0,
-    "rainProbability": 1.0,
-    "windKmh": 12.8
+    "rainProbability": 0.0,
+    "windKmh": 10.9
   },
   {
     "date": "2026-07-24",
     "condition": "Overcast",
-    "maxTemp": 24.0,
-    "minTemp": 14.0,
+    "maxTemp": 23.8,
+    "minTemp": 12.5,
     "rainMm": 0.0,
-    "rainProbability": 4.0,
-    "windKmh": 6.9
+    "rainProbability": 1.0,
+    "windKmh": 9.3
   },
   {
     "date": "2026-07-25",
-    "condition": "Overcast",
-    "maxTemp": 26.9,
-    "minTemp": 14.5,
+    "condition": "Mainly clear",
+    "maxTemp": 26.7,
+    "minTemp": 14.3,
     "rainMm": 0.0,
-    "rainProbability": 7.0,
-    "windKmh": 18.3
+    "rainProbability": 4.0,
+    "windKmh": 14.8
+  },
+  {
+    "date": "2026-07-26",
+    "condition": "Overcast",
+    "maxTemp": 26.3,
+    "minTemp": 17.0,
+    "rainMm": 0.0,
+    "rainProbability": 12.0,
+    "windKmh": 18.2
   }
 ];
 
 const secondWeekForecastTableData = [
   {
-    "date": "2026-07-26",
-    "condition": "Overcast",
-    "maxTemp": 27.4,
-    "minTemp": 13.6,
-    "rainMm": 0.0,
-    "rainProbability": 11.0,
-    "windKmh": 11.9
-  },
-  {
     "date": "2026-07-27",
-    "condition": "Overcast",
-    "maxTemp": 28.2,
-    "minTemp": 16.3,
-    "rainMm": 0.0,
-    "rainProbability": 22.0,
-    "windKmh": 18.0
+    "condition": "Thunderstorm",
+    "maxTemp": 28.0,
+    "minTemp": 20.9,
+    "rainMm": 6.6,
+    "rainProbability": 36.0,
+    "windKmh": 31.1
   },
   {
     "date": "2026-07-28",
-    "condition": "Overcast",
-    "maxTemp": 30.9,
-    "minTemp": 19.8,
-    "rainMm": 0.0,
-    "rainProbability": 27.0,
-    "windKmh": 12.2
+    "condition": "Light drizzle",
+    "maxTemp": 25.2,
+    "minTemp": 16.9,
+    "rainMm": 0.3,
+    "rainProbability": 33.0,
+    "windKmh": 15.5
   },
   {
     "date": "2026-07-29",
-    "condition": "Light drizzle",
-    "maxTemp": 32.5,
-    "minTemp": 22.4,
-    "rainMm": 0.6,
-    "rainProbability": 15.0,
-    "windKmh": 19.0
+    "condition": "Overcast",
+    "maxTemp": 25.8,
+    "minTemp": 14.4,
+    "rainMm": 0.0,
+    "rainProbability": 19.0,
+    "windKmh": 10.2
   },
   {
     "date": "2026-07-30",
-    "condition": "Light drizzle",
+    "condition": "Clear sky",
     "maxTemp": 27.9,
-    "minTemp": 19.3,
-    "rainMm": 2.1,
-    "rainProbability": 26.0,
-    "windKmh": 24.2
+    "minTemp": 16.4,
+    "rainMm": 0.0,
+    "rainProbability": 9.0,
+    "windKmh": 12.5
   },
   {
     "date": "2026-07-31",
-    "condition": "Overcast",
-    "maxTemp": 22.2,
-    "minTemp": 12.2,
-    "rainMm": 0.0,
-    "rainProbability": 29.0,
-    "windKmh": 21.4
+    "condition": "Light drizzle",
+    "maxTemp": 29.8,
+    "minTemp": 20.9,
+    "rainMm": 0.3,
+    "rainProbability": 23.0,
+    "windKmh": 26.6
   },
   {
     "date": "2026-08-01",
     "condition": "Partly cloudy",
-    "maxTemp": 25.1,
-    "minTemp": 12.0,
+    "maxTemp": 29.6,
+    "minTemp": 16.6,
     "rainMm": 0.0,
     "rainProbability": 23.0,
-    "windKmh": 14.7
+    "windKmh": 15.5
+  },
+  {
+    "date": "2026-08-02",
+    "condition": "Overcast",
+    "maxTemp": 31.3,
+    "minTemp": 19.6,
+    "rainMm": 0.0,
+    "rainProbability": 26.0,
+    "windKmh": 17.7
   }
 ];
 
