@@ -1,0 +1,827 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Zentra Weekly Report Dashboard</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+      :root {
+        --modern-blue: #235884;
+        --modern-blue-dark: #173f63;
+        --modern-blue-soft: #eaf5fb;
+        --modern-teal: #2f8c88;
+        --modern-line: #d8e5ef;
+        --modern-text: #1d2a36;
+        --modern-muted: #62748a;
+        --modern-surface: rgba(255, 255, 255, 0.92);
+      }
+
+      body {
+        color: var(--modern-text);
+        background:
+          linear-gradient(180deg, rgba(247, 251, 254, 0.34), rgba(237, 245, 250, 0.58)),
+          url("background/mac-neutral-colored-light-blue-with-cute-little-drawings-on-it-apple-mac-07-10-2025-1759782700-hd-wallpaper.webp");
+        background-attachment: fixed;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+      }
+
+      .dashboard {
+        padding-top: 22px;
+        padding-bottom: 30px;
+      }
+
+      .topbar {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.45);
+        background:
+          linear-gradient(135deg, rgba(28, 81, 123, 0.98), rgba(39, 99, 143, 0.96) 54%, rgba(47, 140, 136, 0.92));
+        box-shadow: 0 18px 38px rgba(31, 83, 123, 0.22);
+      }
+
+      .topbar::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(90deg, rgba(255, 255, 255, 0.18), transparent 32%, rgba(255, 255, 255, 0.08));
+        pointer-events: none;
+      }
+
+      .topbar h1 {
+        position: relative;
+        z-index: 1;
+        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.16);
+      }
+
+      .preview-panel,
+      .map-panel,
+      .signup-panel {
+        border: 1px solid rgba(190, 210, 225, 0.9);
+        background: rgba(255, 255, 255, 0.86);
+        box-shadow: 0 18px 45px rgba(41, 80, 112, 0.13);
+        backdrop-filter: blur(8px);
+      }
+
+      .preview-toolbar {
+        border-bottom-color: var(--modern-line);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(247, 251, 254, 0.88));
+      }
+
+      .preview-toolbar h2,
+      .panel-heading h2,
+      .ndvi-heading h3 {
+        color: #203144;
+      }
+
+      .eyebrow {
+        color: var(--modern-teal);
+        letter-spacing: 0.04em;
+      }
+
+      .ghost-button,
+      .signup-form button {
+        border: 1px solid rgba(37, 91, 135, 0.26);
+        background: linear-gradient(180deg, #ffffff, #f1f7fb);
+        color: var(--modern-blue-dark);
+        box-shadow: 0 8px 18px rgba(29, 78, 119, 0.09);
+        transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+      }
+
+      .ghost-button:hover,
+      .signup-form button:hover {
+        border-color: rgba(47, 140, 136, 0.38);
+        box-shadow: 0 12px 24px rgba(29, 78, 119, 0.15);
+        transform: translateY(-1px);
+      }
+
+      .signup-form button {
+        background: linear-gradient(135deg, var(--modern-blue), var(--modern-blue-dark));
+        color: #ffffff;
+      }
+
+      .meta-table th,
+      .meta-table td {
+        border-bottom-color: #e4edf4;
+      }
+
+      .chart-card,
+      .insight-card,
+      .map-details div,
+      .mini-metrics div,
+      .ndvi-frame {
+        border-color: rgba(196, 214, 228, 0.9);
+        background: linear-gradient(180deg, #ffffff, #f7fbfe);
+        box-shadow: 0 10px 26px rgba(45, 86, 120, 0.08);
+      }
+
+      .chart-card h3 {
+        color: var(--modern-blue-dark);
+      }
+
+      .insight-card {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .insight-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--modern-blue), var(--modern-teal));
+      }
+
+      .section-banner,
+      .data-table thead th {
+        background: linear-gradient(135deg, var(--modern-blue), var(--modern-blue-dark));
+        box-shadow: 0 8px 18px rgba(30, 76, 115, 0.12);
+      }
+
+      .table-scroll {
+        border: 1px solid var(--modern-line);
+        border-radius: 10px;
+        background: #ffffff;
+        box-shadow: 0 10px 24px rgba(44, 83, 112, 0.07);
+      }
+
+      .data-table tbody tr:nth-child(even) {
+        background: #edf6fc;
+      }
+
+      .data-table tbody tr:hover {
+        background: #e3f1f8;
+      }
+
+      .sensor-map {
+        border-color: rgba(184, 207, 222, 0.95);
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.45), 0 12px 30px rgba(35, 78, 111, 0.1);
+      }
+
+      .ndvi-panel {
+        border-top-color: var(--modern-line);
+      }
+
+      .ndvi-frame {
+        background: linear-gradient(180deg, #f4fbf3, #eef7ef);
+      }
+
+      .ndvi-legend div {
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.55), 0 4px 12px rgba(40, 85, 115, 0.12);
+      }
+
+      .ndvi-note,
+      .ndvi-thresholds,
+      .map-details dt,
+      .mini-metrics {
+        color: var(--modern-muted);
+      }
+
+      .signup-form input {
+        border-color: rgba(181, 202, 218, 0.95);
+        background: #fbfdff;
+        box-shadow: inset 0 1px 2px rgba(20, 45, 68, 0.05);
+        transition: border-color 160ms ease, box-shadow 160ms ease;
+      }
+
+      .signup-form input:focus {
+        border-color: rgba(47, 140, 136, 0.75);
+        box-shadow: 0 0 0 4px rgba(47, 140, 136, 0.14);
+        outline: none;
+      }
+
+      .soil-chart-grid canvas {
+        height: 340px;
+      }
+
+      .soil-chart-grid canvas.available-water-chart {
+        height: 240px;
+        margin-top: 12px;
+      }
+
+      .soil-parameters {
+        margin: -2px 0 12px;
+        color: #475569;
+        font-size: 13px;
+        line-height: 1.45;
+        white-space: nowrap;
+      }
+
+      .soil-parameters strong {
+        color: var(--modern-blue-dark);
+        white-space: nowrap;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="dashboard">
+      <section class="topbar" aria-label="Dashboard overview">
+        <h1>Live Field Weather & Soil Dashboard</h1>
+      </section>
+
+      <section class="grid">
+        <section class="preview-panel" aria-label="Sample email preview">
+          <div class="preview-toolbar">
+            <div>
+              <h2>Weekly Data Report</h2>
+            </div>
+            <div class="toolbar-actions">
+              <button id="downloadSummary" class="ghost-button" type="button">Download XLSX</button>
+              <button id="togglePreview" class="ghost-button" type="button" aria-expanded="true">Compact view</button>
+            </div>
+          </div>
+
+          <article id="emailPreview" class="email-preview">
+            <table class="meta-table" aria-label="Sample report metadata">
+              <tr><th>Dashboard updated</th><td id="metaRunTime">--</td></tr>
+              <tr><th>Device</th><td>ZL6 Data Logger</td></tr>
+              <tr><th>Historical Period</th><td id="metaHistoricalPeriod">--</td></tr>
+              <tr><th>Forecast Period</th><td id="metaForecastPeriod">--</td></tr>
+            </table>
+
+            <div class="chart-grid" aria-label="Sample email charts">
+              <section class="chart-card">
+                <h3>Precipitation: 7-Day Historical and 14-Day Forecast</h3>
+                <canvas id="precipChart" width="620" height="260"></canvas>
+              </section>
+              <section class="chart-card">
+                <h3>Min and Max Temperature: 7-Day Historical and 14-Day Forecast</h3>
+                <canvas id="tempChart" width="620" height="260"></canvas>
+              </section>
+            </div>
+
+            <div class="chart-grid soil-chart-grid" aria-label="Open-Meteo soil moisture charts">
+              <section class="chart-card">
+                <h3>Soil Moisture (3-9cm): 7-Day History and 7-Day Forecast</h3>
+                <p class="soil-parameters">
+                  Permanent Wilting Point (&theta;<sub>PWP</sub>) = 0.22, Field Capacity (&theta;<sub>FC</sub>) = 0.30, Saturation (&theta;<sub>S</sub>) = 0.37.
+                </p>
+                <canvas id="soilMoistureShallowChart" width="620" height="340"></canvas>
+                <canvas id="availableWaterShallowChart" class="available-water-chart" width="620" height="240"></canvas>
+              </section>
+              <section class="chart-card">
+                <h3>Soil Moisture (27-81cm): 7-Day History and 7-Day Forecast</h3>
+                <p class="soil-parameters">
+                  Permanent Wilting Point (&theta;<sub>PWP</sub>) = 0.17, Field Capacity (&theta;<sub>FC</sub>) = 0.30, Saturation (&theta;<sub>S</sub>) = 0.39.
+                </p>
+                <canvas id="soilMoistureDeepChart" width="620" height="340"></canvas>
+                <canvas id="availableWaterDeepChart" class="available-water-chart" width="620" height="240"></canvas>
+              </section>
+            </div>
+
+            <section class="forecast-insights" aria-label="Forecast insights">
+              <article class="insight-card">
+                <p class="eyebrow">Precipitation Outlook</p>
+                <h3 id="rainTotal">--</h3>
+                <p id="rainWettest">--</p>
+              </article>
+              <article class="insight-card">
+                <p class="eyebrow">Temperature Outlook</p>
+                <h3 id="comparisonTemp">--</h3>
+                <p id="comparisonRain">--</p>
+              </article>
+              <article class="insight-card">
+                <p class="eyebrow">Risk Flags</p>
+                <div id="riskBadges" class="risk-badges"></div>
+              </article>
+            </section>
+
+            <h3 class="section-banner">7-Day Historical Measurements (ZentraCloud)</h3>
+            <div class="table-scroll">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Min Temp (°C)</th>
+                    <th>Max Temp (°C)</th>
+                    <th>Precipitation (mm)</th>
+                    <th>Solar Radiation (W/m2)</th>
+                    <th>Wind Speed (m/s)</th>
+                  </tr>
+                </thead>
+                <tbody id="historicalSummaryBody"></tbody>
+              </table>
+            </div>
+
+            <h3 class="section-banner">14-Day Forecast (Open-Meteo)</h3>
+            <div class="table-scroll">
+              <table class="data-table forecast-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Condition</th>
+                    <th>Max (°C)</th>
+                    <th>Min (°C)</th>
+                    <th>Rain (mm)</th>
+                    <th>Rain %</th>
+                    <th>Wind (km/h)</th>
+                  </tr>
+                </thead>
+                <tbody id="forecastTableBody"></tbody>
+              </table>
+            </div>
+
+            <h3 class="section-banner">Sentinel-2 NDVI Summary</h3>
+            <div class="table-scroll">
+              <table class="data-table ndvi-summary-table">
+                <thead>
+                  <tr>
+                    <th>Metric</th>
+                    <th>Value</th>
+                    <th>Meaning</th>
+                  </tr>
+                </thead>
+                <tbody id="ndviSummaryBody">
+                  <tr><td colspan="3">Run weekly_runner_v3 to load NDVI statistics.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+        </section>
+
+        <div class="side-stack">
+          <aside class="map-panel" aria-label="Sensor location">
+            <div class="panel-heading">
+              <p class="eyebrow">Location</p>
+              <h2>
+                Lima, Ohio, USA
+              </h2>
+            </div>
+            <div id="sensorMap" class="sensor-map" role="img" aria-label="Interactive map showing the Zentra sensor location"></div>
+            <section class="ndvi-panel" aria-label="Latest Sentinel-2 NDVI">
+              <div class="ndvi-heading">
+                <h3>Latest Sentinel-2 NDVI</h3>
+                <span id="ndviDate">--</span>
+              </div>
+              <div class="ndvi-frame">
+                <img id="ndviImage" alt="Latest Sentinel-2 NDVI for the field">
+                <p id="ndviEmpty">Run weekly_runner_v3 with a Google Earth Engine field asset to load NDVI.</p>
+              </div>
+              <div class="ndvi-legend" aria-label="NDVI color legend">
+                <span>Low</span>
+                <div></div>
+                <span>High</span>
+              </div>
+              <div id="ndviStats" class="ndvi-stats" aria-label="NDVI statistics"></div>
+              <p id="ndviInterpretation" class="ndvi-interpretation"></p>
+              <p class="ndvi-note">
+                NDVI ranges from -1 to 1. Higher values indicate denser, healthier green vegetation;
+                lower values usually indicate bare soil, stressed vegetation, water, shadow, or clouds.
+              </p>
+              <ul class="ndvi-thresholds" aria-label="NDVI threshold guide">
+                <li><b>&lt; 0.30</b> Low vegetation, bare soil, water, shadow, or stress.</li>
+                <li><b>0.30-0.60</b> Moderate vegetation or mixed canopy/soil.</li>
+                <li><b>&ge; 0.60</b> Dense, vigorous green vegetation.</li>
+              </ul>
+            </section>
+            <dl class="map-details">
+              <div>
+                <dt>Latitude</dt>
+                <dd>40.743377</dd>
+              </div>
+              <div>
+                <dt>Longitude</dt>
+                <dd>-84.024581</dd>
+              </div>
+            </dl>
+          </aside>
+
+          <aside class="signup-panel" aria-label="Email signup">
+            <div class="panel-heading">
+              <p class="eyebrow">Subscribe</p>
+              <h2>Receive Weekly Weather Updates</h2>
+            </div>
+
+            <form id="signupForm" class="signup-form">
+              <label for="email">Email address</label>
+              <div class="field-row">
+                <input id="email" name="email" type="email" autocomplete="email" placeholder="name@example.com" required>
+                <button type="submit">Request report</button>
+              </div>
+              <p id="formMessage" class="form-message" role="status" aria-live="polite"></p>
+            </form>
+
+            <div class="mini-metrics" aria-label="Report contents">
+              <div>
+                <span>14</span>
+                Daily values
+              </div>
+              <div>
+                <span>2</span>
+                Inline charts
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="app.js"></script>
+    <script>
+      const soilMoistureData = [
+  {
+    "date": "2026-07-23",
+    "type": "history",
+    "soilMoisture3To9": 0.261,
+    "soilMoisture27To81": 0.274
+  },
+  {
+    "date": "2026-07-24",
+    "type": "history",
+    "soilMoisture3To9": 0.253,
+    "soilMoisture27To81": 0.272
+  },
+  {
+    "date": "2026-07-25",
+    "type": "history",
+    "soilMoisture3To9": 0.249,
+    "soilMoisture27To81": 0.273
+  },
+  {
+    "date": "2026-07-26",
+    "type": "history",
+    "soilMoisture3To9": 0.241,
+    "soilMoisture27To81": 0.271
+  },
+  {
+    "date": "2026-07-27",
+    "type": "history",
+    "soilMoisture3To9": 0.247,
+    "soilMoisture27To81": 0.283
+  },
+  {
+    "date": "2026-07-28",
+    "type": "history",
+    "soilMoisture3To9": 0.269,
+    "soilMoisture27To81": 0.282
+  },
+  {
+    "date": "2026-07-29",
+    "type": "history",
+    "soilMoisture3To9": 0.255,
+    "soilMoisture27To81": 0.279
+  },
+  {
+    "date": "2026-07-30",
+    "type": "forecast",
+    "soilMoisture3To9": 0.243,
+    "soilMoisture27To81": 0.276
+  },
+  {
+    "date": "2026-07-31",
+    "type": "forecast",
+    "soilMoisture3To9": 0.235,
+    "soilMoisture27To81": 0.273
+  },
+  {
+    "date": "2026-08-01",
+    "type": "forecast",
+    "soilMoisture3To9": 0.251,
+    "soilMoisture27To81": 0.272
+  },
+  {
+    "date": "2026-08-02",
+    "type": "forecast",
+    "soilMoisture3To9": 0.29,
+    "soilMoisture27To81": 0.272
+  },
+  {
+    "date": "2026-08-03",
+    "type": "forecast",
+    "soilMoisture3To9": 0.292,
+    "soilMoisture27To81": 0.272
+  },
+  {
+    "date": "2026-08-04",
+    "type": "forecast",
+    "soilMoisture3To9": 0.297,
+    "soilMoisture27To81": 0.273
+  },
+  {
+    "date": "2026-08-05",
+    "type": "forecast",
+    "soilMoisture3To9": 0.313,
+    "soilMoisture27To81": 0.276
+  }
+];
+
+      function formatSoilDateLabel(dateText) {
+        const date = new Date(`${dateText}T00:00:00`);
+        return date.toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric"
+        });
+      }
+
+      function setupSoilCanvas(canvas) {
+        const ratio = window.devicePixelRatio || 1;
+        const rect = canvas.getBoundingClientRect();
+        const width = rect.width || canvas.width;
+        const height = rect.height || canvas.height;
+        canvas.width = width * ratio;
+        canvas.height = height * ratio;
+        const ctx = canvas.getContext("2d");
+        ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+        return { ctx, width, height };
+      }
+
+      function availableWaterRemaining(theta, thetaPwp, thetaFc) {
+        if (!Number.isFinite(theta)) return null;
+        return ((theta - thetaPwp) / (thetaFc - thetaPwp)) * 100;
+      }
+
+      function drawAvailableWaterChart(canvasId, field, thetaPwp, thetaFc) {
+        const canvas = document.getElementById(canvasId);
+        if (!canvas) return;
+        const { ctx, width, height } = setupSoilCanvas(canvas);
+        const rows = soilMoistureData
+          .filter((row) => Number.isFinite(row[field]))
+          .map((row) => ({
+            ...row,
+            availableWater: availableWaterRemaining(row[field], thetaPwp, thetaFc)
+          }))
+          .filter((row) => Number.isFinite(row.availableWater));
+        ctx.clearRect(0, 0, width, height);
+
+        if (!rows.length) {
+          ctx.fillStyle = "#64748b";
+          ctx.font = "13px Arial";
+          ctx.textAlign = "center";
+          ctx.fillText("Available water will appear after Open-Meteo soil moisture data loads.", width / 2, height / 2);
+          return;
+        }
+
+        const pad = { top: 32, right: 32, bottom: 96, left: 56 };
+        const plotWidth = width - pad.left - pad.right;
+        const plotHeight = height - pad.top - pad.bottom;
+        const values = rows.map((row) => row.availableWater);
+        const minValue = Math.min(0, Math.floor(Math.min(...values) / 10) * 10);
+        const maxValue = Math.max(100, Math.ceil(Math.max(...values) / 10) * 10);
+        const historyCount = rows.filter((row) => row.type === "history").length;
+        const splitX = pad.left + (plotWidth * historyCount) / rows.length;
+        const barWidth = Math.max(4, (plotWidth / rows.length) * 0.58);
+
+        ctx.fillStyle = "rgba(168, 50, 50, 0.08)";
+        ctx.fillRect(pad.left, pad.top, Math.max(0, splitX - pad.left), plotHeight);
+        ctx.fillStyle = "rgba(40, 96, 168, 0.08)";
+        ctx.fillRect(splitX, pad.top, width - pad.right - splitX, plotHeight);
+
+        ctx.fillStyle = "#1e293b";
+        ctx.font = "13px Arial";
+        ctx.textAlign = "left";
+        ctx.fillText("Available Water Remaining (%)", pad.left, 16);
+
+        drawSoilLegend(ctx, Math.max(pad.left + 220, width - pad.right - 235), 16, { compact: true, rectangles: true });
+
+        ctx.strokeStyle = "#0f172a";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(pad.left, pad.top);
+        ctx.lineTo(pad.left, height - pad.bottom);
+        ctx.lineTo(width - pad.right, height - pad.bottom);
+        ctx.stroke();
+
+        ctx.font = "12px Arial";
+        ctx.fillStyle = "#475569";
+        ctx.textAlign = "right";
+        for (let i = 0; i <= 4; i += 1) {
+          const value = minValue + ((maxValue - minValue) / 4) * i;
+          const y = height - pad.bottom - (plotHeight * i) / 4;
+          ctx.fillText(value.toFixed(0), pad.left - 8, y + 4);
+          ctx.strokeStyle = "rgba(148, 163, 184, 0.22)";
+          ctx.beginPath();
+          ctx.moveTo(pad.left, y);
+          ctx.lineTo(width - pad.right, y);
+          ctx.stroke();
+        }
+
+        rows.forEach((row, index) => {
+          const x = pad.left + (plotWidth * (index + 0.5)) / rows.length;
+          const zeroY = height - pad.bottom - ((0 - minValue) / (maxValue - minValue)) * plotHeight;
+          const valueY = height - pad.bottom - ((row.availableWater - minValue) / (maxValue - minValue)) * plotHeight;
+          const y = Math.min(zeroY, valueY);
+          const barHeight = Math.max(2, Math.abs(zeroY - valueY));
+          ctx.fillStyle = row.type === "history" ? "#a83232" : "#2860a8";
+          ctx.fillRect(x - barWidth / 2, y, barWidth, barHeight);
+
+          ctx.save();
+          ctx.translate(x, height - pad.bottom + 8);
+          ctx.rotate(Math.PI / 2);
+          ctx.fillStyle = "#64748b";
+          ctx.font = "12px Arial";
+          ctx.textAlign = "left";
+          ctx.textBaseline = "middle";
+          ctx.fillText(formatSoilDateLabel(row.date), 0, 0);
+          ctx.restore();
+        });
+      }
+
+      function drawSoilLegend(ctx, x, y, options = {}) {
+        const compact = Boolean(options.compact);
+        const rectangles = Boolean(options.rectangles);
+        ctx.font = "13px Arial";
+        ctx.textAlign = "left";
+        ctx.textBaseline = "middle";
+
+        ctx.strokeStyle = "#a83232";
+        ctx.lineWidth = 3;
+        if (rectangles) {
+          ctx.fillStyle = "#a83232";
+          ctx.fillRect(x, y - 4, compact ? 26 : 34, 8);
+        } else {
+          ctx.setLineDash([6, 4]);
+          ctx.beginPath();
+          ctx.moveTo(x, y);
+          ctx.lineTo(x + (compact ? 26 : 34), y);
+          ctx.stroke();
+          ctx.setLineDash([]);
+        }
+        ctx.fillStyle = "#334155";
+        ctx.fillText("Historical", x + (compact ? 32 : 42), y);
+
+        const secondX = x + (compact ? 118 : 160);
+        ctx.strokeStyle = "#2860a8";
+        ctx.lineWidth = 4;
+        if (rectangles) {
+          ctx.fillStyle = "#2860a8";
+          ctx.fillRect(secondX, y - 4, compact ? 26 : 34, 8);
+        } else {
+          ctx.beginPath();
+          ctx.moveTo(secondX, y);
+          ctx.lineTo(secondX + (compact ? 26 : 34), y);
+          ctx.stroke();
+        }
+        ctx.fillStyle = "#334155";
+        ctx.fillText("Forecast", secondX + (compact ? 32 : 42), y);
+      }
+
+      function drawSoilLine(ctx, points, color, dashed) {
+        if (!points.length) return;
+        ctx.strokeStyle = color;
+        ctx.fillStyle = color;
+        ctx.lineWidth = 2.5;
+        if (dashed) ctx.setLineDash([6, 4]);
+        ctx.beginPath();
+        points.forEach((point, index) => {
+          if (index === 0) ctx.moveTo(point.x, point.y);
+          else ctx.lineTo(point.x, point.y);
+        });
+        ctx.stroke();
+        ctx.setLineDash([]);
+        points.forEach((point) => {
+          ctx.beginPath();
+          ctx.arc(point.x, point.y, 2.7, 0, Math.PI * 2);
+          ctx.fill();
+        });
+      }
+
+      function drawSoilThresholds(ctx, thresholds, pad, width, height, minValue, maxValue) {
+        const plotHeight = height - pad.top - pad.bottom;
+        thresholds.forEach((threshold) => {
+          const y = height - pad.bottom - ((threshold.value - minValue) / (maxValue - minValue)) * plotHeight;
+          ctx.strokeStyle = "rgba(30, 41, 59, 0.58)";
+          ctx.lineWidth = 1.2;
+          ctx.setLineDash([7, 5]);
+          ctx.beginPath();
+          ctx.moveTo(pad.left, y);
+          ctx.lineTo(width - pad.right, y);
+          ctx.stroke();
+          ctx.setLineDash([]);
+
+          ctx.fillStyle = "#1e293b";
+          ctx.font = "12px Arial";
+          ctx.textAlign = "left";
+          ctx.textBaseline = "bottom";
+          ctx.fillText(threshold.label, pad.left + 8, y - 3);
+        });
+      }
+
+      function drawSoilMoistureChart(canvasId, field, yAxisLabel, thresholds) {
+        const canvas = document.getElementById(canvasId);
+        if (!canvas) return;
+        const { ctx, width, height } = setupSoilCanvas(canvas);
+        const rows = soilMoistureData.filter((row) => Number.isFinite(row[field]));
+        ctx.clearRect(0, 0, width, height);
+
+        if (!rows.length) {
+          ctx.fillStyle = "#64748b";
+          ctx.font = "14px Arial";
+          ctx.textAlign = "center";
+          ctx.fillText("Open-Meteo soil moisture data will appear after weekly_runner_v4 runs.", width / 2, height / 2);
+          return;
+        }
+
+        const pad = { top: 48, right: 26, bottom: 86, left: 68 };
+        const plotWidth = width - pad.left - pad.right;
+        const plotHeight = height - pad.top - pad.bottom;
+        const minValue = 0.1;
+        const maxValue = 0.45;
+        const historyCount = rows.filter((row) => row.type === "history").length;
+        const splitX = pad.left + (plotWidth * historyCount) / rows.length;
+
+        ctx.fillStyle = "rgba(168, 50, 50, 0.08)";
+        ctx.fillRect(pad.left, pad.top, Math.max(0, splitX - pad.left), plotHeight);
+        ctx.fillStyle = "rgba(40, 96, 168, 0.08)";
+        ctx.fillRect(splitX, pad.top, width - pad.right - splitX, plotHeight);
+
+        ctx.strokeStyle = "#0f172a";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(pad.left, pad.top);
+        ctx.lineTo(pad.left, height - pad.bottom);
+        ctx.lineTo(width - pad.right, height - pad.bottom);
+        ctx.stroke();
+
+        ctx.font = "13px Arial";
+        ctx.fillStyle = "#475569";
+        ctx.textAlign = "right";
+        for (let i = 0; i <= 4; i += 1) {
+          const value = minValue + ((maxValue - minValue) / 4) * i;
+          const y = height - pad.bottom - (plotHeight * i) / 4;
+          ctx.fillText(value.toFixed(2), pad.left - 9, y + 4);
+          ctx.strokeStyle = "rgba(148, 163, 184, 0.24)";
+          ctx.beginPath();
+          ctx.moveTo(pad.left, y);
+          ctx.lineTo(width - pad.right, y);
+          ctx.stroke();
+        }
+
+        drawSoilThresholds(ctx, thresholds, pad, width, height, minValue, maxValue);
+
+        ctx.save();
+        ctx.translate(17, pad.top + plotHeight / 2);
+        ctx.rotate(-Math.PI / 2);
+        ctx.fillStyle = "#1f2937";
+        ctx.font = "14px Arial";
+        ctx.textAlign = "center";
+        ctx.fillText(yAxisLabel, 0, 0);
+        ctx.restore();
+
+        const points = rows.map((row, index) => {
+          const x = pad.left + (plotWidth * (index + 0.5)) / rows.length;
+          const y = height - pad.bottom - ((row[field] - minValue) / (maxValue - minValue)) * plotHeight;
+          return { ...row, x, y };
+        });
+
+        rows.forEach((row, index) => {
+          const x = pad.left + (plotWidth * (index + 0.5)) / rows.length;
+          ctx.strokeStyle = "rgba(148, 163, 184, 0.22)";
+          ctx.beginPath();
+          ctx.moveTo(x, pad.top);
+          ctx.lineTo(x, height - pad.bottom);
+          ctx.stroke();
+
+          ctx.save();
+          ctx.translate(x, height - pad.bottom + 8);
+          ctx.rotate(Math.PI / 2);
+          ctx.fillStyle = "#64748b";
+          ctx.font = "13px Arial";
+          ctx.textAlign = "left";
+          ctx.textBaseline = "middle";
+          ctx.fillText(formatSoilDateLabel(row.date), 0, 0);
+          ctx.restore();
+        });
+
+        drawSoilLegend(ctx, pad.left + plotWidth / 2 - 150, 20);
+        drawSoilLine(ctx, points.filter((point) => point.type === "history"), "#a83232", true);
+        drawSoilLine(ctx, points.filter((point) => point.type === "forecast"), "#2860a8", false);
+      }
+
+      function drawSoilMoistureCharts() {
+        drawAvailableWaterChart("availableWaterShallowChart", "soilMoisture3To9", 0.22, 0.30);
+        drawAvailableWaterChart("availableWaterDeepChart", "soilMoisture27To81", 0.17, 0.30);
+        drawSoilMoistureChart(
+          "soilMoistureShallowChart",
+          "soilMoisture3To9",
+          "Soil moisture (m3/m3)",
+          [
+            { value: 0.22, label: "Permanent Wilting Point" },
+            { value: 0.3, label: "Field Capacity" },
+            { value: 0.37, label: "Saturation" }
+          ]
+        );
+        drawSoilMoistureChart(
+          "soilMoistureDeepChart",
+          "soilMoisture27To81",
+          "Soil moisture (m3/m3)",
+          [
+            { value: 0.17, label: "Permanent Wilting Point" },
+            { value: 0.3, label: "Field Capacity" },
+            { value: 0.39, label: "Saturation" }
+          ]
+        );
+      }
+
+      drawSoilMoistureCharts();
+      window.addEventListener("resize", drawSoilMoistureCharts);
+    </script>
+  </body>
+</html>
