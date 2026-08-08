@@ -2,8 +2,8 @@ const SIGNUP_ENDPOINT = "";
 const FALLBACK_EMAIL = "dialameh.babak@gmail.com";
 const SENSOR_LATITUDE = 40.743377;
 const SENSOR_LONGITUDE = -84.024581;
-const dashboardUpdatedAt = "2026-08-08 14:54";
-const ndviImageUrl = "sentinel2_ndvi_latest.png?v=20260808145445";
+const dashboardUpdatedAt = "2026-08-08 15:07";
+const ndviImageUrl = "sentinel2_ndvi_latest.png?v=20260808150737";
 const ndviAcquiredAt = "2026-08-04";
 const ndviCloudPercent = 0.9;
 const ndviStatusMessage = "";
@@ -239,37 +239,37 @@ const forecastRiskData = [
   {
     "date": "2026-08-09",
     "rain": 0.4,
-    "rainProbability": 33.0,
+    "rainProbability": 30.0,
     "wind": 20.9
   },
   {
     "date": "2026-08-10",
     "rain": 28.9,
-    "rainProbability": 46.0,
+    "rainProbability": 63.0,
     "wind": 48.0
   },
   {
     "date": "2026-08-11",
     "rain": 15.3,
-    "rainProbability": 56.0,
+    "rainProbability": 75.0,
     "wind": 38.2
   },
   {
     "date": "2026-08-12",
     "rain": 11.6,
-    "rainProbability": 53.0,
+    "rainProbability": 57.0,
     "wind": 17.9
   },
   {
     "date": "2026-08-13",
     "rain": 5.1,
-    "rainProbability": 34.0,
+    "rainProbability": 43.0,
     "wind": 19.2
   },
   {
     "date": "2026-08-14",
     "rain": 0.0,
-    "rainProbability": 23.0,
+    "rainProbability": 22.0,
     "wind": 13.2
   }
 ];
@@ -349,7 +349,7 @@ const forecastTableData = [
     "maxTemp": 31.0,
     "minTemp": 17.8,
     "rainMm": 0.4,
-    "rainProbability": 33.0,
+    "rainProbability": 30.0,
     "windKmh": 20.9
   },
   {
@@ -358,7 +358,7 @@ const forecastTableData = [
     "maxTemp": 29.1,
     "minTemp": 19.5,
     "rainMm": 28.9,
-    "rainProbability": 46.0,
+    "rainProbability": 63.0,
     "windKmh": 48.0
   },
   {
@@ -367,7 +367,7 @@ const forecastTableData = [
     "maxTemp": 28.4,
     "minTemp": 18.8,
     "rainMm": 15.3,
-    "rainProbability": 56.0,
+    "rainProbability": 75.0,
     "windKmh": 38.2
   },
   {
@@ -376,7 +376,7 @@ const forecastTableData = [
     "maxTemp": 27.1,
     "minTemp": 20.1,
     "rainMm": 11.6,
-    "rainProbability": 53.0,
+    "rainProbability": 57.0,
     "windKmh": 17.9
   },
   {
@@ -385,7 +385,7 @@ const forecastTableData = [
     "maxTemp": 23.7,
     "minTemp": 14.2,
     "rainMm": 5.1,
-    "rainProbability": 34.0,
+    "rainProbability": 43.0,
     "windKmh": 19.2
   },
   {
@@ -394,7 +394,7 @@ const forecastTableData = [
     "maxTemp": 20.9,
     "minTemp": 9.9,
     "rainMm": 0.0,
-    "rainProbability": 23.0,
+    "rainProbability": 22.0,
     "windKmh": 13.2
   }
 ];
@@ -406,7 +406,7 @@ const secondWeekForecastTableData = [
     "maxTemp": 22.6,
     "minTemp": 11.9,
     "rainMm": 0.3,
-    "rainProbability": 25.0,
+    "rainProbability": 27.0,
     "windKmh": 13.7
   },
   {
@@ -415,7 +415,7 @@ const secondWeekForecastTableData = [
     "maxTemp": 24.6,
     "minTemp": 14.9,
     "rainMm": 0.0,
-    "rainProbability": 21.0,
+    "rainProbability": 19.0,
     "windKmh": 10.1
   },
   {
@@ -424,7 +424,7 @@ const secondWeekForecastTableData = [
     "maxTemp": 20.8,
     "minTemp": 16.9,
     "rainMm": 4.8,
-    "rainProbability": 15.0,
+    "rainProbability": 19.0,
     "windKmh": 15.3
   },
   {
@@ -433,7 +433,7 @@ const secondWeekForecastTableData = [
     "maxTemp": 25.3,
     "minTemp": 18.4,
     "rainMm": 2.7,
-    "rainProbability": 22.0,
+    "rainProbability": 24.0,
     "windKmh": 11.6
   },
   {
