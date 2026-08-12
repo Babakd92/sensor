@@ -2,12 +2,12 @@ const SIGNUP_ENDPOINT = "";
 const FALLBACK_EMAIL = "dialameh.babak@gmail.com";
 const SENSOR_LATITUDE = 40.743377;
 const SENSOR_LONGITUDE = -84.024581;
-const dashboardUpdatedAt = "2026-08-12 10:49";
-const ndviImageUrl = "";
-const ndviAcquiredAt = "";
-const ndviCloudPercent = "";
-const ndviStatusMessage = "earthengine-api is not installed; skipping Sentinel-2 NDVI.";
-const ndviStats = {};
+const dashboardUpdatedAt = "2026-08-12 10:54";
+const ndviImageUrl = "sentinel2_ndvi_latest.png?v=20260812105439";
+const ndviAcquiredAt = "2026-08-09";
+const ndviCloudPercent = 3.2;
+const ndviStatusMessage = "";
+const ndviStats = {"mean": 0.787, "min": 0.132, "max": 0.895, "stdDev": 0.13, "lowVegetationPct": 3.3, "moderateVegetationPct": 2.9, "highVegetationPct": 93.8, "interpretation": "Most valid field pixels show dense, vigorous green vegetation."};
 const chartHoverTargets = {
   precipChart: [],
   tempChart: []
